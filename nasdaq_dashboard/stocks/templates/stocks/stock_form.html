@@ -1,0 +1,8 @@
+<h2>새 종목 등록</h2>
+<form method="post">
+  {% csrf_token %}
+  <label>Symbol: </label><input type="text" name="symbol"><br>
+  <label>Name: </label><input type="text" name="name"><br>
+  <label>Sector: </label><input type="text" name="sector"><br>
+  <button type="submit">등록</button>
+</form>
