@@ -1,0 +1,10 @@
+<h2>{{ stock.name }} ({{ stock.symbol }}) 상세정보</h2>
+
+<p>현재가: ${{ latest_price }}</p>
+<p>시가: ${{ open_price }}</p>
+<p>고가: ${{ high_price }}</p>
+<p>저가: ${{ low_price }}</p>
+
+<img src="data:image/png;base64,{{ graph }}" alt="stock graph" />
+
+<br><a href="{% url 'stock_list' %}">← 돌아가기</a>

@@ -4,7 +4,7 @@
   <tr><th>Symbol</th><th>Name</th><th>Sector</th></tr>
   {% for s in stocks %}
   <tr>
-    <td>{{ s.symbol }}</td>
+    <td><a href="{% url 'stock_detail' s.symbol %}">{{ s.symbol }}</a></td>
     <td>{{ s.name }}</td>
     <td>{{ s.sector }}</td>
   </tr>
