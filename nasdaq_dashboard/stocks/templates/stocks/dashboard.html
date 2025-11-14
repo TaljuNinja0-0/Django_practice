@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>📊 관심종목 대시보드</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+    }
+    h2 {
+      color: #2f3640;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 10px;
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background: #f1f2f6;
+    }
+    .up {
+      color: green;
+      font-weight: bold;
+    }
+    .down {
+      color: red;
+      font-weight: bold;
+    }
+    img {
+      width: 120px;
+      height: 60px;
+    }
+    a.button {
+      display: inline-block;
+      padding: 8px 15px;
+      margin-bottom: 15px;
+      background: #273c75;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+    a.button:hover {
+      background: #40739e;
+    }
+  </style>
+</head>
+<body>
+  <h2>📈 관심종목 대시보드</h2>
+  <a href="/" class="button">← 종목 목록으로 돌아가기</a>
+
+  {% if data %}
+  <table>
+    <tr>
+      <th>Symbol</th>
+      <th>Name</th>
+      <th>현재가 ($)</th>
+      <th>변동</th>
+      <th>7일 차트</th>
+    </tr>
+    {% for d in data %}
+    <tr>
+      <td><a href="/{{ d.symbol }}/">{{ d.symbol }}</a></td>
+      <td>{{ d.name }}</td>
+      <td>${{ d.latest }}</td>
+      <td class="{% if d.change > 0 %}up{% else %}down{% endif %}">
+        {{ d.change }} ({{ d.change_percent }}%)
+      </td>
+      <td><img src="data:image/png;base64,{{ d.graph }}" alt="chart"></td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>등록된 종목이 없습니다.</p>
+  {% endif %}
+</body>
+</html>

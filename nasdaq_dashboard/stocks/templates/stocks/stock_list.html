@@ -1,5 +1,7 @@
 <h2>📊 나의 관심 종목</h2>
-<a href="{% url 'stock_add' %}">+ 새 종목 추가</a>
+<a href="{% url 'stock_add' %}">➕ 새 종목 추가</a>
+<a href="/dashboard/" class="button">📈 대시보드 보기</a>
+<br><br>
 <table border="1" cellpadding="5">
   <tr><th>Symbol</th><th>Name</th><th>Sector</th></tr>
   {% for s in stocks %}

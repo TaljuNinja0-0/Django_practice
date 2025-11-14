@@ -3,6 +3,8 @@ from .models import Stock
 #from django.contrib.auth.decorators import login_required
 import yfinance as yf
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import io, base64
@@ -82,3 +84,52 @@ def stock_detail(request, symbol):
     }
 
     return render(request, 'stocks/stock_detail.html', context)
+
+
+def dashboard(request):
+    stocks = Stock.objects.all()
+    dashboard_data = []
+
+    for s in stocks:
+        try:
+            df = yf.download(s.symbol, period="7d", interval="1d", progress=False)
+            if df.empty:
+                continue
+
+            latest = float(df['Close'].iloc[-1])
+            prev = float(df['Close'].iloc[-2]) if len(df) > 1 else latest
+            change = round(latest - prev, 2)
+            change_percent = round((change / prev) * 100, 2) if prev != 0 else 0
+
+            # 미니 차트 생성
+            plt.figure(figsize=(3, 1.5))
+            plt.plot(df.index, df['Close'], color=('green' if change > 0 else 'red'))
+            plt.xticks([])
+            plt.yticks([])
+            plt.tight_layout()
+
+            buffer = io.BytesIO()
+            plt.savefig(buffer, format='png')
+            buffer.seek(0)
+            image_png = buffer.getvalue()
+            buffer.close()
+            graph = base64.b64encode(image_png).decode('utf-8')
+            plt.close()
+
+            dashboard_data.append({
+                'symbol': s.symbol,
+                'name': s.name,
+                'latest': round(latest, 2),
+                'change': change,
+                'change_percent': change_percent,
+                'graph': graph,
+                'color': 'green' if change > 0 else 'red'
+            })
+        except Exception as e:
+            print(f"Error fetching data for {s.symbol}: {e}")
+            continue
+
+    context = {
+        'data': dashboard_data,
+    }
+    return render(request, 'stocks/dashboard.html', context)
