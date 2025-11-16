@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>회원가입</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body { 
+      font-family: Arial, sans-serif; 
+      background: #f4f6f8; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      height: 100vh; 
+    }
+
+    .signup-box { 
+      background: white; 
+      padding: 30px; 
+      border-radius: 8px; 
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+      width: 300px; 
+      text-align: center; 
+    }
+
+    input { 
+      width: 100%; 
+      padding: 8px; 
+      margin: 10px 0; 
+      border-radius: 4px; 
+      border: 1px solid #ccc; 
+    }
+
+    button { 
+      width: 100%; 
+      padding: 10px; 
+      background: #273c75; 
+      color: white; 
+      border: none; 
+      border-radius: 5px; 
+      cursor: pointer; 
+    }
+
+    button:hover { 
+      background: #40739e; 
+    }
+
+    .login-link { 
+      margin-top: 15px; 
+      display: block; 
+      color: #273c75; 
+      text-decoration: none; 
+    }
+
+    .login-link:hover { 
+      text-decoration: underline; 
+    }
+
+    .error { 
+      color: red; 
+      font-size: 0.9em; 
+      margin-bottom: 10px; 
+    }
+  </style>
+</head>
+
+<body>
+  <div class="signup-box">
+    <h2>회원가입</h2>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p class="error">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <input type="text" name="username" placeholder="아이디" required>
+      <input type="password" name="password" placeholder="비밀번호" required>
+      <input type="password" name="password2" placeholder="비밀번호 확인" required>
+      <button type="submit">회원가입</button>
+    </form>
+
+    <a href="{% url 'login' %}" class="login-link">로그인 화면으로 돌아가기</a>
+  </div>
+</body>
+</html>

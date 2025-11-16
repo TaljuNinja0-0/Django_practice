@@ -17,6 +17,7 @@
       border-collapse: collapse;
       background: white;
       box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      margin-bottom: 50px;
     }
     th, td {
       padding: 10px;
@@ -27,11 +28,11 @@
       background: #f1f2f6;
     }
     .up {
-      color: green;
+      color: #009432;
       font-weight: bold;
     }
     .down {
-      color: red;
+      color: #EA2027;
       font-weight: bold;
     }
     img {
@@ -54,7 +55,7 @@
 </head>
 <body>
   <h2>📈 관심종목 대시보드</h2>
-  <a href="/" class="button">← 종목 목록으로 돌아가기</a>
+  <a href="{% url 'stock_list' %}" class="button">← 종목 목록으로 돌아가기</a>
 
   {% if data %}
   <table>
@@ -65,20 +66,43 @@
       <th>변동</th>
       <th>7일 차트</th>
     </tr>
+
     {% for d in data %}
     <tr>
       <td><a href="/{{ d.symbol }}/">{{ d.symbol }}</a></td>
       <td>{{ d.name }}</td>
       <td>${{ d.latest }}</td>
-      <td class="{% if d.change > 0 %}up{% else %}down{% endif %}">
+
+      <td class="{{ d.trend }}">
         {{ d.change }} ({{ d.change_percent }}%)
       </td>
-      <td><img src="data:image/png;base64,{{ d.graph }}" alt="chart"></td>
+
+      <td>
+        <img src="data:image/png;base64,{{ d.chart }}" alt="chart">
+      </td>
     </tr>
     {% endfor %}
   </table>
   {% else %}
   <p>등록된 종목이 없습니다.</p>
+  {% endif %}
+
+  {% if sector_chart %}
+  <div class="sector-summary">
+    <h3>섹터별 평균 상승률 차트</h3>
+    <img src="data:image/png;base64,{{ sector_chart }}" alt="섹터 차트" style="width: 600px; height: 300px;">
+  </div>
+  {% endif %}
+
+  {% if sector_summary %}
+  <div class="sector-summary">
+    <h4>섹터별 평균 상승률</h4>
+    <ul>
+      {% for sector, percent in sector_summary.items %}
+        <li>{{ sector }}: {{ percent }}%</li>
+      {% endfor %}
+    </ul>
+  </div>
   {% endif %}
 </body>
 </html>
